@@ -18,7 +18,7 @@ class CronProcessor:
         self.db = db
         self.platform = platform
 
-    async def run_cron_job(self):
+    async def add_platform_messages(self):
         while True:
             cron_interval = int(os.environ.get("CRON_INTERVAL", DEFAULT_CRON_INTERVAL_SEC))
             logging.info(f"Running cron job with interval {cron_interval} seconds...")
@@ -32,7 +32,7 @@ class CronProcessor:
                     await self.db.insert_message(msg)
                 logging.info("Cron job done!")
             except Exception as e:
-                logging.error(f"Error in run_cron_job. {e}")
+                logging.error(f"Error in add_platform_messages. {e}")
             await asyncio.sleep(cron_interval)
 
     async def run_data_processor(self):
@@ -100,8 +100,13 @@ async def main():
     platform = Twitter()
     cron_processor = CronProcessor(db, platform)
 
+    # I want 2 methods here and not just pass the result of add_platform_messages to run_data_processor
+    # because I want the db to always reflect the current status because I'll make updates directly 
+    # on it on supabase. And this will happen for multiple reasons, including that I expect my app to
+    # crash from time to time and I'll manually update the status of a record to be reprocessed or
+    # to not be considered again if I manually post the reply from the bot account via the UI.
     await asyncio.gather(
-        cron_processor.run_cron_job(),
+        cron_processor.add_platform_messages(),
         cron_processor.run_data_processor()
     )
 
