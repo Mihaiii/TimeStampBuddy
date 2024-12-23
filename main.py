@@ -4,9 +4,11 @@ import logging
 from typing import List
 from db import BaseDB, Supabase
 from platform import BasePlatform, Twitter
+from dotenv import load_dotenv
 
+
+load_dotenv()
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-
 DEFAULT_CRON_INTERVAL_SEC = 60 * 15
 DEFAULT_PROCESSOR_INTERVAL_SEC = 60 * 5
 DEFAULT_MAX_PARALLEL_MESSAGES = 1
@@ -23,9 +25,11 @@ class CronProcessor:
             try:
                 latest_db_id = await self.db.get_latest_message_id()
                 logging.debug(f"{latest_db_id=}")                
-                messages = await self.platform.gather_messages(since_message_id=latest_db_id)
+                messages, headers = await self.platform.gather_messages(since_message_id=latest_db_id)
                 logging.debug(f"{len(messages)=}")
-                await self.db.insert_messages(messages)
+                await self.db.insert_jobrun(messages, headers)
+                for msg in messages:
+                    await self.db.insert_message(msg)
                 logging.info("Cron job done!")
             except Exception as e:
                 logging.error(f"Error in run_cron_job. {e}")
@@ -44,12 +48,20 @@ class CronProcessor:
             tasks = [self._process_message(msg) for msg in messages]
             await asyncio.gather(*tasks)
 
-    async def _get_messages_to_process(self, top: int) -> List:
+    async def _get_messages_to_process(self, limit: int) -> List:
         try:
-            return await self.db.get_messages_to_process(top)
+            return await self.db.get_messages_to_process(limit)
         except Exception as e:
             logging.error(f"Error getting messages to process: {e}")
             return []
+
+    def _get_video_id(self, text):
+        pattern = r'https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([0-9A-Za-z_-]{11})'
+        match = re.search(pattern, message)
+        if match:
+            return match.group(1)
+        else:
+            return None
 
     async def _process_message(self, msg):
         try:
@@ -57,7 +69,15 @@ class CronProcessor:
         except Exception as e:
             logging.error(f"Error when updating to Processed. {msg.id=}. {e}")
 
-        timestamps = await self.db.get_timestamps(message=msg)
+
+        video_id = self._get_video_id(msg["text"])
+        if not video_id:
+            try:
+                await self.db.update(msg, Status.invalid)
+            except Exception as e:
+                logging.error(f"Error when updating to Invalid. {msg.id=}. {e}")
+
+        timestamps = await self.db.get_timestamps(video_id=video_id)
         if timestamps is None:
             # TODO: Call scripts to get timestamps, insert them into the database (Chapters), and assign them to timestamps
             pass

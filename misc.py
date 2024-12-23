@@ -14,4 +14,5 @@ class Status(Enum):
     empty = 0
     process_start = 1
     process_end = 2
-    answered = 3
+    answered = 3,
+    invalid = 4
