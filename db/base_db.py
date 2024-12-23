@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Dict
 from misc import TSBMessage, Status
 
 
@@ -11,7 +11,7 @@ class BaseDB(ABC):
         pass
 
     @abstractmethod
-    async def insert_jobrun(self, messages: List[TSBMessage], headers: Dictionary[str, str]) -> None:
+    async def insert_jobrun(self, messages: List[TSBMessage], headers: dict[str, str]) -> None:
         # inserts infos about the job run into the db
         pass
 

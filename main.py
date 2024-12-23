@@ -3,12 +3,12 @@ import os
 import logging
 from typing import List
 from db import BaseDB, Supabase
-from platform import BasePlatform, Twitter
+from msg_platform import BasePlatform, Twitter
 from dotenv import load_dotenv
 
 
 load_dotenv()
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 DEFAULT_CRON_INTERVAL_SEC = 60 * 15
 DEFAULT_PROCESSOR_INTERVAL_SEC = 60 * 5
 DEFAULT_MAX_PARALLEL_MESSAGES = 1
@@ -96,7 +96,7 @@ class CronProcessor:
         logging.info("Data processed!")
 
 async def main():
-    db = Supabase()
+    db = await Supabase.create()
     platform = Twitter()
     cron_processor = CronProcessor(db, platform)
 
