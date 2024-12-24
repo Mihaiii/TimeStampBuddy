@@ -9,8 +9,6 @@ import traceback
 from misc import Status, TSBMessage
 import re
 
-load_dotenv()
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 DEFAULT_CRON_INTERVAL_SEC = 60 * 15
 DEFAULT_PROCESSOR_INTERVAL_SEC = 60 * 5
 DEFAULT_MAX_PARALLEL_MESSAGES = 1
@@ -116,4 +114,6 @@ async def main():
     )
 
 if __name__ == "__main__":
+    load_dotenv()
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     asyncio.run(main())
