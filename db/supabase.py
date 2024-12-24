@@ -39,7 +39,7 @@ class Supabase(BaseDB):
         response = await self.supabase.table("TSBMessage").insert({k: v for k, v in vars(message).items() if k != "id"}).execute()
         logging.info(response)
 
-    async def get_messages_to_process(self, limit: Optional[int]) -> Optional[TSBMessage]:
+    async def get_messages_to_process(self, limit: Optional[int]) -> List[TSBMessage]:
         logging.debug("get_messages_to_process")
         query = self.supabase.table("TSBMessage").select("*").eq("status", 0).order("id")
         if limit:
@@ -47,10 +47,11 @@ class Supabase(BaseDB):
         response = await query.execute()
         logging.info(response)
         if len(response.data) == 0:
-            return None
-        return response.data[0]["newest_msg_id"]
+            return []
+        return [TSBMessage(id=m["id"], status=m["status"], msg_text=m["msg_text"], msg_from=m["msg_from"], msg_id=m["msg_id"]) for m in response.data]
 
     async def get_timestamps(self, video_id: str) -> Optional[str]:
+        logging.debug("get_timestamps")
         response = await self.supabase.table("Chapter").select("summary").eq("video_id", video_id).limit(1).execute()
         logging.info(response)
         if len(response.data) == 0:
@@ -58,5 +59,6 @@ class Supabase(BaseDB):
         return response.data[0]["summary"]
 
     async def update(self, message: TSBMessage, status: Status) -> None:
-        response = await self.supabase.table("countries").update({"status": status.value}).eq("id", message.id).execute()
+        logging.debug("update")
+        response = await self.supabase.table("TSBMessage").update({"status": status.value}).eq("id", message.id).execute()
         logging.info(response)

@@ -6,6 +6,8 @@ from db import BaseDB, Supabase
 from msg_platform import BasePlatform, Twitter
 from dotenv import load_dotenv
 import traceback
+from misc import Status, TSBMessage
+import re
 
 load_dotenv()
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
@@ -41,6 +43,7 @@ class CronProcessor:
             max_parallel_messages = int(os.environ.get("MAX_MESSAGES", DEFAULT_MAX_PARALLEL_MESSAGES))
             messages = await self._get_messages_to_process(max_parallel_messages)
             if not messages:
+                logging.info(f"No message to be processed found in the db")
                 await asyncio.sleep(processor_interval)
                 logging.info(f"Processing data with interval {processor_interval} seconds...")
                 continue
@@ -57,25 +60,27 @@ class CronProcessor:
 
     def _get_video_id(self, text):
         pattern = r'https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([0-9A-Za-z_-]{11})'
-        match = re.search(pattern, message)
+        match = re.search(pattern, text)
         if match:
             return match.group(1)
         else:
             return None
 
-    async def _process_message(self, msg):
+    async def _process_message(self, msg: TSBMessage):
         try:
             await self.db.update(msg, Status.process_start)
         except Exception as e:
             logging.error(f"Error when updating to Processed. {msg.id=}. {traceback.format_exc()} {e}")
 
 
-        video_id = self._get_video_id(msg["text"])
+        video_id = self._get_video_id(msg.msg_text)
         if not video_id:
             try:
                 await self.db.update(msg, Status.invalid)
             except Exception as e:
                 logging.error(f"Error when updating to Invalid. {msg.id=}. {traceback.format_exc()} {e}")
+            finally:
+                return
 
         timestamps = await self.db.get_timestamps(video_id=video_id)
         if timestamps is None:
@@ -91,7 +96,7 @@ class CronProcessor:
             await self.platform.reply(timestamps, msg.platform_message_id)
             await self.db.update(msg, Status.answered)
         except Exception as e:
-            logging.error(f"Error when replying or when updating to Answered. {msg.id=}, {msg.platform_message_id=}, {timestamps=}, {traceback.format_exc()} {e}")
+            logging.error(f"Error when replying or when updating to Answered. {msg.id=}, {timestamps=}, {traceback.format_exc()} {e}")
 
         logging.info("Data processed!")
 

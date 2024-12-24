@@ -25,6 +25,8 @@ class Twitter(BasePlatform):
             params["since_id"] = since_message_id
         response = await self.client.get_users_mentions(**params)
         logging.info(response)
+        if len(response.data) == 0:
+            return []
         return [TSBMessage(status=Status.empty.value, msg_text=m.text, msg_from=next(x.username for x in response.includes["users"] if x.id == m.author_id), msg_id=m["id"]) for m in response.data]
 
     async def reply(self, text: str, platform_message_id: str) -> None:

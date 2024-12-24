@@ -21,7 +21,7 @@ class BaseDB(ABC):
         pass
 
     @abstractmethod
-    async def get_messages_to_process(self, limit: Optional[int]) -> Optional[TSBMessage]:
+    async def get_messages_to_process(self, limit: Optional[int]) -> List[TSBMessage]:
         # gets latest messages that can be processed,
         # meaning the oldest message with status empty.
         pass
