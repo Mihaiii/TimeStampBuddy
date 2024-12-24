@@ -15,7 +15,7 @@ class Supabase(BaseDB):
         url = os.environ.get("SUPABASE_URL")
         key = os.environ.get("SUPABASE_KEY")
         supabase_client = await create_async_client(
-            url, key, options=ClientOptions(auto_refresh_token=True)
+            url, key, options=ClientOptions(auto_refresh_token=True, persist_session=True)
         )
         return cls(supabase_client)
 
