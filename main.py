@@ -43,7 +43,7 @@ class CronProcessor:
             max_parallel_messages = int(os.environ.get("MAX_MESSAGES", DEFAULT_MAX_PARALLEL_MESSAGES))
             messages = await self._get_messages_to_process(max_parallel_messages)
             if not messages:
-                logging.info(f"No message to be processed found in the db")
+                logging.info(f"No message to be processed found in the db. Will wait {processor_interval} seconds.")
                 await asyncio.sleep(processor_interval)
                 logging.info(f"Processing data with interval {processor_interval} seconds...")
                 continue
@@ -107,7 +107,7 @@ async def main():
 
     # I want 2 methods here and not just to pass the result of add_platform_messages to run_data_processor.
     # The reason is that I want the db to always reflect the current state because I'll make updates directly 
-    # on it on supabase. And this will happen for multiple reasons, including that I expect my app to
+    # on it from supabase's web UI. And this will happen for multiple reasons, including that I expect my app to
     # crash from time to time and I'll manually update the status of a record to be reprocessed or
     # to not be considered again if I manually post the reply from the bot account via the UI.
     await asyncio.gather(
