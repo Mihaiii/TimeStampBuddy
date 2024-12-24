@@ -3,7 +3,6 @@ from typing import Optional, List, Dict
 from misc import TSBMessage, Status
 import os
 import logging
-import json
 from supabase.lib.client_options import ClientOptions
 from supabase import create_async_client
 
@@ -28,10 +27,10 @@ class Supabase(BaseDB):
             return None
         return response.data[0]["newest_msg_id"]
     
-    async def insert_jobrun(self, messages: List[TSBMessage], headers: dict[str, str]) -> None:
+    async def insert_jobrun(self, messages: List[TSBMessage]) -> None:
         logging.debug("insert_jobrun")
         newest_msg_id = max([int(z["msg_id"]) for z in messages])
-        data = {"nr_msgs_found":len(messages), "newest_msg_id": newest_msg_id, "headers": json.dumps(headers)}
+        data = {"nr_msgs_found":len(messages), "newest_msg_id": newest_msg_id}
         response = await self.supabase.table("JobRun").insert(data).execute()
         logging.info(response)
 

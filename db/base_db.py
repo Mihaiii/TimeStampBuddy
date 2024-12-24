@@ -11,7 +11,7 @@ class BaseDB(ABC):
         pass
 
     @abstractmethod
-    async def insert_jobrun(self, messages: List[TSBMessage], headers: dict[str, str]) -> None:
+    async def insert_jobrun(self, messages: List[TSBMessage]) -> None:
         # inserts infos about the job run into the db
         pass
 

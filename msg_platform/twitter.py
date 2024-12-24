@@ -18,14 +18,14 @@ class Twitter(BasePlatform):
         )
         self.timestampbuddy_userid = os.environ.get("X_USERID", '')
 
-    async def gather_messages(self, since_message_id: str) -> Tuple[List[TSBMessage], dict[str, str]]:
+    async def gather_messages(self, since_message_id: str) -> List[TSBMessage]:
         logging.debug("gather_messages")
         params = {"id": self.timestampbuddy_userid, "expansions": "author_id", "user_auth": True}
         if since_message_id:
             params["since_id"] = since_message_id
         response = await self.client.get_users_mentions(**params)
         logging.info(response)
-        return [TSBMessage(status=Status.empty.value, msg_text=m.text, msg_from=next(x.username for x in response.includes["users"] if x.id == m.author_id), msg_id=m["id"]) for m in response.data], response.headers
+        return [TSBMessage(status=Status.empty.value, msg_text=m.text, msg_from=next(x.username for x in response.includes["users"] if x.id == m.author_id), msg_id=m["id"]) for m in response.data]
 
     async def reply(self, text: str, platform_message_id: str) -> None:
         logging.debug("reply")
