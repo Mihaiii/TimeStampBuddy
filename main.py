@@ -106,7 +106,7 @@ async def main():
     cron_processor = CronProcessor(db, platform)
 
     # I want 2 methods here and not just to pass the result of add_platform_messages to run_data_processor.
-    # The reason is that I want the db to always reflect the current status because I'll make updates directly 
+    # The reason is that I want the db to always reflect the current state because I'll make updates directly 
     # on it on supabase. And this will happen for multiple reasons, including that I expect my app to
     # crash from time to time and I'll manually update the status of a record to be reprocessed or
     # to not be considered again if I manually post the reply from the bot account via the UI.
