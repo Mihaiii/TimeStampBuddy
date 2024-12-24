@@ -58,5 +58,5 @@ class Supabase(BaseDB):
         return response.data[0]["summary"]
 
     async def update(self, message: TSBMessage, status: Status) -> None:
-        response = await self.supabase.table("countries").update({"status": status.value}).eq("id", message["id"]).execute()
+        response = await self.supabase.table("countries").update({"status": status.value}).eq("id", message.id).execute()
         logging.info(response)
