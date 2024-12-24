@@ -5,10 +5,10 @@ from typing import List
 from db import BaseDB, Supabase
 from msg_platform import BasePlatform, Twitter
 from dotenv import load_dotenv
-
+import traceback
 
 load_dotenv()
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 DEFAULT_CRON_INTERVAL_SEC = 60 * 15
 DEFAULT_PROCESSOR_INTERVAL_SEC = 60 * 5
 DEFAULT_MAX_PARALLEL_MESSAGES = 1
@@ -32,7 +32,7 @@ class CronProcessor:
                     await self.db.insert_message(msg)
                 logging.info("Cron job done!")
             except Exception as e:
-                logging.error(f"Error in add_platform_messages. {e}")
+                logging.error(f"Error in add_platform_messages. {traceback.format_exc()} {e}")
             await asyncio.sleep(cron_interval)
 
     async def run_data_processor(self):
@@ -52,7 +52,7 @@ class CronProcessor:
         try:
             return await self.db.get_messages_to_process(limit)
         except Exception as e:
-            logging.error(f"Error getting messages to process: {e}")
+            logging.error(f"Error getting messages to process: {traceback.format_exc()} {e}")
             return []
 
     def _get_video_id(self, text):
@@ -67,7 +67,7 @@ class CronProcessor:
         try:
             await self.db.update(msg, Status.process_start)
         except Exception as e:
-            logging.error(f"Error when updating to Processed. {msg.id=}. {e}")
+            logging.error(f"Error when updating to Processed. {msg.id=}. {traceback.format_exc()} {e}")
 
 
         video_id = self._get_video_id(msg["text"])
@@ -75,7 +75,7 @@ class CronProcessor:
             try:
                 await self.db.update(msg, Status.invalid)
             except Exception as e:
-                logging.error(f"Error when updating to Invalid. {msg.id=}. {e}")
+                logging.error(f"Error when updating to Invalid. {msg.id=}. {traceback.format_exc()} {e}")
 
         timestamps = await self.db.get_timestamps(video_id=video_id)
         if timestamps is None:
@@ -85,13 +85,13 @@ class CronProcessor:
         try:
             await self.db.update(msg, Status.process_end)
         except Exception as e:
-            logging.error(f"Error when updating to Processed. {msg.id=}. {e}")
+            logging.error(f"Error when updating to Processed. {msg.id=}. {traceback.format_exc()} {e}")
 
         try:
             await self.platform.reply(timestamps, msg.platform_message_id)
             await self.db.update(msg, Status.answered)
         except Exception as e:
-            logging.error(f"Error when replying or when updating to Answered. {msg.id=}, {msg.platform_message_id=}, {timestamps=}, {e}")
+            logging.error(f"Error when replying or when updating to Answered. {msg.id=}, {msg.platform_message_id=}, {timestamps=}, {traceback.format_exc()} {e}")
 
         logging.info("Data processed!")
 
@@ -100,8 +100,8 @@ async def main():
     platform = Twitter()
     cron_processor = CronProcessor(db, platform)
 
-    # I want 2 methods here and not just pass the result of add_platform_messages to run_data_processor
-    # because I want the db to always reflect the current status because I'll make updates directly 
+    # I want 2 methods here and not just to pass the result of add_platform_messages to run_data_processor.
+    # The reason is that I want the db to always reflect the current status because I'll make updates directly 
     # on it on supabase. And this will happen for multiple reasons, including that I expect my app to
     # crash from time to time and I'll manually update the status of a record to be reprocessed or
     # to not be considered again if I manually post the reply from the bot account via the UI.
