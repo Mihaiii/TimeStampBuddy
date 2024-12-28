@@ -62,3 +62,8 @@ class Supabase(BaseDB):
         logging.debug("update")
         response = await self.supabase.table("TSBMessage").update({"status": status.value}).eq("id", message.id).execute()
         logging.info(response)
+    
+    async def add_chapters(self, video_id: str, timestamps: str) -> None:
+        logging.debug("add_chapters")
+        response = await self.supabase.table("Chapter").insert({"video_id": video_id, "timestamps": timestamps}).execute()
+        logging.info(response)

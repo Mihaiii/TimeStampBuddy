@@ -35,3 +35,8 @@ class BaseDB(ABC):
     async def update(self, message: TSBMessage, status: Status) -> None:
         # updates the message with a Status
         pass
+
+    @abstractmethod
+    async def add_chapters(self, video_id: str, timestamps: str) -> None:
+        # adds the timestamps for a given video_id
+        pass

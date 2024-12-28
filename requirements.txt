@@ -1,2 +1,3 @@
 supabase
 tweepy[async]
+youtube_transcript_api
