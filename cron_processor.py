@@ -88,7 +88,12 @@ class CronProcessor:
                 timestamps = instance.get_timestamps(video_id)
             except Exception as e:
                 logging.error(f"Error when calling get_timestamps. {video_id=}. {traceback.format_exc()} {e}")
-                return
+                try:
+                    await self.db.update(msg, Status.no_subs)
+                except Exception as e:
+                    logging.error(f"Error when updating to no_subs. {msg.id=}. {traceback.format_exc()} {e}")
+                finally:
+                    return
 
             try:
                 await self.db.add_chapters(video_id, timestamps)
