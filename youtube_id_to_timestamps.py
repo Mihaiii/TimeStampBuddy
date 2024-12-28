@@ -9,11 +9,14 @@ import tempfile
 DEFAULT_GEMINI_MODEL = "gemini-2.0-flash-exp"
 
 class YoutubeIdToTimestamps:
-    def _seconds_to_hhmmss(seconds):
+    def __init__(self):
+        genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
+
+    def _seconds_to_hhmmss(self, seconds):
         td = timedelta(seconds=round(seconds))
         return str(td)
 
-    def _get_transcript(youtube_id):
+    def _get_transcript(self, youtube_id):
         data = YouTubeTranscriptApi.get_transcript(youtube_id)
 
         transformed_data = [
@@ -25,14 +28,14 @@ class YoutubeIdToTimestamps:
         ]
         return get_transcript
 
-    def _upload_to_gemini(file_content, mime_type=None):
+    def _upload_to_gemini(self, file_content, mime_type=None):
         with tempfile.NamedTemporaryFile(suffix=".tmp") as tmpfile:
             tmpfile.write(file_content)
             tmp_path = tmpfile.name
             file = genai.upload_file(tmp_path, mime_type=mime_type)
             return file
 
-    def _wait_for_files_active(files):
+    def _wait_for_files_active(self, files):
         for name in (file.name for file in files):
             file = genai.get_file(name)
             while file.state.name == "PROCESSING":
@@ -41,7 +44,7 @@ class YoutubeIdToTimestamps:
             if file.state.name != "ACTIVE":
             raise Exception(f"File {file.name} failed to process")
 
-    def get_timestamps(youtube_id):
+    def get_timestamps(self, youtube_id):
         file_content = _get_transcript(youtube_id)
         model = genai.GenerativeModel(
             model_name=os.environ.get("GEMINI_MODEL", DEFAULT_GEMINI_MODEL),
