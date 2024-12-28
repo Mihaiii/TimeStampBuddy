@@ -83,8 +83,13 @@ class CronProcessor:
 
         timestamps = await self.db.get_timestamps(video_id=video_id)
         if timestamps is None:
-            instance = YoutubeIdToTimestamps()
-            timestamps = instance.get_timestamps(video_id)
+            try:
+                instance = YoutubeIdToTimestamps()
+                timestamps = instance.get_timestamps(video_id)
+            except Exception as e:
+                logging.error(f"Error when calling get_timestamps. {video_id=}. {traceback.format_exc()} {e}")
+                return
+
             try:
                 await self.db.add_chapters(video_id, timestamps)
             except Exception as e:
