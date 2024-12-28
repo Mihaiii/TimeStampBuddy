@@ -4,6 +4,13 @@ from misc import TSBMessage
 
 
 class BasePlatform(ABC):
+
+    @abstractmethod
+    async def get_original_url(self, message_text: str) -> str:
+        # Some platforms don't allow external links to be posted directly
+        # and use an internal service to redirect to the original URL
+        pass
+
     @abstractmethod
     async def gather_messages(self, since_message_id: str) -> List[TSBMessage]:
         # Get latest messages that mention a particular user

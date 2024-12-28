@@ -57,8 +57,9 @@ class CronProcessor:
             return []
 
     def _get_video_id(self, text):
+        youtube_url = self.platform.get_original_url(text)
         pattern = r'https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([0-9A-Za-z_-]{11})'
-        match = re.search(pattern, text)
+        match = re.search(pattern, youtube_url)
         if match:
             return match.group(1)
         else:
@@ -69,7 +70,6 @@ class CronProcessor:
             await self.db.update(msg, Status.process_start)
         except Exception as e:
             logging.error(f"Error when updating to Processed. {msg.id=}. {traceback.format_exc()} {e}")
-
 
         video_id = self._get_video_id(msg.msg_text)
         if not video_id:

@@ -23,7 +23,7 @@ class Supabase(BaseDB):
         logging.debug("get_latest_message_id")
         response = await self.supabase.table("JobRun").select("newest_msg_id").order("id", desc=True).limit(1).execute()
         logging.info(response)
-        if len(response.data) == 0:
+        if not response.data:
             return None
         return response.data[0]["newest_msg_id"]
     
@@ -46,7 +46,7 @@ class Supabase(BaseDB):
             query = query.limit(limit)
         response = await query.execute()
         logging.info(response)
-        if len(response.data) == 0:
+        if not response.data:
             return []
         return [TSBMessage(id=m["id"], status=m["status"], msg_text=m["msg_text"], msg_from=m["msg_from"], msg_id=m["msg_id"]) for m in response.data]
 
@@ -54,7 +54,7 @@ class Supabase(BaseDB):
         logging.debug("get_timestamps")
         response = await self.supabase.table("Chapter").select("summary").eq("video_id", video_id).limit(1).execute()
         logging.info(response)
-        if len(response.data) == 0:
+        if not response.data:
             return None
         return response.data[0]["summary"]
 
