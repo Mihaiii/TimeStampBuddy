@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import traceback
 from misc import Status, TSBMessage
 import re
+from youtube_id_to_timestamps import YoutubeIdToTimestamps
 
 DEFAULT_COLLECT_CRON_INTERVAL_SEC = 60 * 15
 DEFAULT_PROCESSOR_INTERVAL_SEC = 60 * 5
@@ -58,7 +59,7 @@ class CronProcessor:
 
     def _get_video_id(self, text):
         youtube_url = self.platform.get_original_url(text)
-        pattern = r'https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([0-9A-Za-z_-]{11})'
+        pattern = r'https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?(?:[^=&]*=[^=&]*&)*v=|embed\/|v\/)|youtu\.be\/)([0-9A-Za-z_-]{11})'
         match = re.search(pattern, youtube_url)
         if match:
             return match.group(1)
@@ -95,7 +96,7 @@ class CronProcessor:
             logging.error(f"Error when updating to Processed. {msg.id=}. {traceback.format_exc()} {e}")
 
         try:
-            await self.platform.reply(timestamps, msg.platform_message_id)
+            await self.platform.reply(timestamps, msg.msg_id)
             await self.db.update(msg, Status.answered)
         except Exception as e:
             logging.error(f"Error when replying or when updating to Answered. {msg.id=}, {timestamps=}, {traceback.format_exc()} {e}")
@@ -119,5 +120,9 @@ async def main():
 
 if __name__ == "__main__":
     load_dotenv()
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    logging.basicConfig(
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
     asyncio.run(main())

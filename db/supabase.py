@@ -21,7 +21,7 @@ class Supabase(BaseDB):
 
     async def get_latest_message_id(self) -> Optional[str]:
         logging.debug("get_latest_message_id")
-        response = await self.supabase.table("JobRun").select("newest_msg_id").order("id", desc=True).limit(1).execute()
+        response = await self.supabase.table("JobRun").select("newest_msg_id").neq("newest_msg_id", None).order("id", desc=True).limit(1).execute()
         logging.info(response)
         if not response.data:
             return None
@@ -29,7 +29,7 @@ class Supabase(BaseDB):
     
     async def insert_jobrun(self, messages: List[TSBMessage]) -> None:
         logging.debug("insert_jobrun")
-        newest_msg_id = max([int(z.msg_id) for z in messages])
+        newest_msg_id = max([int(z.msg_id) for z in messages], default=None)
         data = {"nr_msgs_found":len(messages), "newest_msg_id": newest_msg_id}
         response = await self.supabase.table("JobRun").insert(data).execute()
         logging.info(response)
@@ -52,11 +52,11 @@ class Supabase(BaseDB):
 
     async def get_timestamps(self, video_id: str) -> Optional[str]:
         logging.debug("get_timestamps")
-        response = await self.supabase.table("Chapter").select("summary").eq("video_id", video_id).limit(1).execute()
+        response = await self.supabase.table("Chapter").select("timestamps").eq("video_id", video_id).limit(1).execute()
         logging.info(response)
         if not response.data:
             return None
-        return response.data[0]["summary"]
+        return response.data[0]["timestamps"]
 
     async def update(self, message: TSBMessage, status: Status) -> None:
         logging.debug("update")

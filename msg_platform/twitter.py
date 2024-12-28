@@ -6,6 +6,7 @@ import logging
 from tweepy.asynchronous import AsyncClient
 import requests
 from urllib.parse import urlparse
+import re
 
 class Twitter(BasePlatform):
     def __init__(self):
