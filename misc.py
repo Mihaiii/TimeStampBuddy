@@ -17,4 +17,4 @@ class Status(Enum):
     process_end = 2
     answered = 3
     invalid = 4
-    no_subs = 5
+    failed_timestamps = 5

@@ -89,9 +89,9 @@ class CronProcessor:
             except Exception as e:
                 logging.error(f"Error when calling get_timestamps. {video_id=}. {traceback.format_exc()} {e}")
                 try:
-                    await self.db.update(msg, Status.no_subs)
+                    await self.db.update(msg, Status.failed_timestamps)
                 except Exception as e:
-                    logging.error(f"Error when updating to no_subs. {msg.id=}. {traceback.format_exc()} {e}")
+                    logging.error(f"Error when updating to failed_timestamps. {msg.id=}. {traceback.format_exc()} {e}")
                 finally:
                     return
 
