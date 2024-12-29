@@ -13,7 +13,13 @@ DEFAULT_GEMINI_MODEL = "gemini-2.0-flash-exp"
 class YoutubeIdToTimestamps:
     def __init__(self):
         genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
-        self.proxy = os.environ.get("YT_TRANSCRIPT_PROXY", "")
+        pr = os.environ.get("YT_TRANSCRIPT_PROXY", "")
+        self.proxies = None
+        if pr:
+            self.proxies = {
+                "https": pr.replace("http://", "https://"),
+                "http": pr.replace("https://", "http://")
+            }
 
     def _seconds_to_hhmmss(self, seconds):
         td = timedelta(seconds=round(seconds))
@@ -21,9 +27,8 @@ class YoutubeIdToTimestamps:
 
     def _get_transcript(self, youtube_id):
         logging.info(f"{youtube_id} - making the request to get the transcript")
-        proxies = {"https": self.proxy, "http": self.proxy} if self.proxy else None
         #TODO: get the language from the text from the tweet
-        data = YouTubeTranscriptApi.get_transcript(youtube_id, languages=['en', 'es', 'de'], proxies=proxies)
+        data = YouTubeTranscriptApi.get_transcript(youtube_id, languages=['en', 'es', 'de'], proxies=self.proxies)
         logging.info(f"{youtube_id} - got the transcript. First 5 objs: {data[:5]}")
         transformed_data = [
             {
