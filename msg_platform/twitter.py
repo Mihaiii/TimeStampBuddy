@@ -23,10 +23,7 @@ class Twitter(BasePlatform):
 
     async def gather_messages(self, since_message_id: str) -> List[TSBMessage]:
         logging.debug("gather_messages")
-        params = {"id": self.timestampbuddy_userid, "expansions": "author_id", "user_auth": True, "max_results": 100}
-        if since_message_id:
-            params["since_id"] = since_message_id
-        response = await self.client.get_users_mentions(**params)
+        response = await self.client.get_users_mentions(id=self.timestampbuddy_userid,expansions="author_id", user_auth=True, max_results=100, since_id=since_message_id)
         logging.info(response)
         if not response.data:
             return []
