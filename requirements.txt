@@ -3,4 +3,3 @@ tweepy[async]
 youtube_transcript_api
 python-dotenv
 google-generativeai
-requests[socks]
