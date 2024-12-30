@@ -28,7 +28,8 @@ class CronProcessor:
                 logging.debug(f"{latest_db_id=}")                
                 messages = await self.platform.gather_messages(since_message_id=latest_db_id)
                 logging.debug(f"{len(messages)=}")
-                await self.db.insert_jobrun(messages)
+                if messages:
+                    await self.db.insert_jobrun(messages)
                 for msg in messages:
                     await self.db.insert_message(msg)
                 logging.info("Cron job for collect_platform_messages done!")
