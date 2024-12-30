@@ -95,7 +95,7 @@ class YoutubeIdToTimestamps:
         logging.info(f"{youtube_id} - Seconds response received - {len(response.text)=}")
         chat_session.history.append({"role": "model", "parts": [response.text]})
         
-        follow_up_message2 = f"Make it even shorter. Just merge chapters into bigger categories. Provide the final response. Only few chapters with just the big picture."
-        response_final = chat_session.send_message(follow_up_message2)
-        logging.info(f"{youtube_id} - {response_final.text} - {len(response.text)=}")
-        return response_final.text[:MAX_RESPONSE_LENGTH]
+        follow_up_message = f"Make it even shorter. Just merge chapters into bigger categories. Provide the final response. Only few chapters with just the big picture."
+        response = chat_session.send_message(follow_up_message)
+        logging.info(f"{youtube_id} - {response.text} - {len(response.text)=}")
+        return response.text[:MAX_RESPONSE_LENGTH]
