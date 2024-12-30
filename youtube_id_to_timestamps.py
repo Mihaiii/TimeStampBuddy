@@ -90,7 +90,12 @@ class YoutubeIdToTimestamps:
         logging.info(f"{youtube_id} - First response received")
         chat_session.history.append({"role": "model", "parts": [response.text]})
 
-        follow_up_message = f"That's good, but it's too granular. The full response must have less than {MAX_RESPONSE_LENGTH} characters, including new lines. Extract the main ideas/chapters and present them. Only have a chapter at every few minutes, like in the example. Mention as timestamp the beginning of each chapter. See the provided example from above for a better understanding. Answer only with the timestamps and chapters, nothing else and remember to make the response short enought to not exceed {MAX_RESPONSE_LENGTH} characters."
+        follow_up_message = f"That's good, but it's too granular. The full response must have less than {MAX_RESPONSE_LENGTH} characters, including new lines. Extract the main ideas/chapters and present them. Only have a chapter at every few minutes, like in the example. Mention as timestamp the beginning of each chapter. See the provided example from above for a better understanding. Answer only with the timestamps and chapters, nothing else."
         response = chat_session.send_message(follow_up_message)
-        logging.info(f"{youtube_id} - {response.text}")
-        return response.text[:MAX_RESPONSE_LENGTH]
+        logging.info(f"{youtube_id} - Seconds response received")
+        chat_session.history.append({"role": "model", "parts": [response.text]})
+        
+        follow_up_message2 = f"Remember to make the response short enought to not exceed {MAX_RESPONSE_LENGTH} characters - do not truncate the response, just merge chapters instead. Provide the final response."
+        response_final = chat_session.send_message(follow_up_message2)
+        logging.info(f"{youtube_id} - {response_final.text}")
+        return response_final.text[:MAX_RESPONSE_LENGTH]
