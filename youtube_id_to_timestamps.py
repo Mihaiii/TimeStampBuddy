@@ -9,11 +9,10 @@ import json
 import logging
 
 DEFAULT_GEMINI_MODEL = "gemini-2.0-flash-exp"
-MAX_RESPONSE_LENGTH = 280
 
 
 class YoutubeIdToTimestamps:
-    def __init__(self):
+    def __init__(self, max_response_length):
         genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
         pr = os.environ.get("YT_TRANSCRIPT_PROXY", "")
         self.proxies = None
@@ -22,6 +21,7 @@ class YoutubeIdToTimestamps:
                 "https": pr.replace("http://", "https://"),
                 "http": pr.replace("https://", "http://"),
             }
+        self.max_response_length = max_response_length
 
     def _seconds_to_hhmmss(self, seconds):
         td = timedelta(seconds=round(seconds))

@@ -77,3 +77,6 @@ class Twitter(BasePlatform):
             return url
         except Exception as e:
             return url
+
+    def get_max_response_length(self) -> int:
+        return 280

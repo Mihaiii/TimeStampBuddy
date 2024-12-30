@@ -110,7 +110,7 @@ class CronProcessor:
         timestamps = await self.db.get_timestamps(video_id=video_id)
         if timestamps is None:
             try:
-                instance = YoutubeIdToTimestamps()
+                instance = YoutubeIdToTimestamps(self.platform.get_max_response_length())
                 timestamps = instance.get_timestamps(video_id)
             except Exception as e:
                 logging.error(
