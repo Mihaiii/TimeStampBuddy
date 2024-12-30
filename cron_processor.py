@@ -81,7 +81,7 @@ class CronProcessor:
 
     def _get_video_id(self, text):
         youtube_url = self.platform.get_original_url(text)
-        pattern = r"https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?(?:[^=&]*=[^=&]*&)*v=|embed\/|v\/)|youtu\.be\/)([0-9A-Za-z_-]{11})"
+        pattern = r"https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?(?:[^=&]*=[^=&]*&)*v=|embed\/|v\/|live\/)|youtu\.be\/)([0-9A-Za-z_-]{11})"
         match = re.search(pattern, youtube_url)
         if match:
             return match.group(1)
