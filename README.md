@@ -57,5 +57,5 @@ YT_TRANSCRIPT_PROXY = ""
 
 - **GEMINI_API_KEY** – Obtain this key from [Google AI Studio](https://aistudio.google.com/library) → "Get API Key".  
 
-- **YT_TRANSCRIPT_PROXY** – The proxy URL if the service is hosted in the cloud. Refer to this [GitHub Issue](https://github.com/jdepoix/youtube-transcript-api/issues/303) for more details.
+- **YT_TRANSCRIPT_PROXY** – The proxy URL if the service is hosted in the cloud. Leave it empty if you don't want to use a proxy. Refer to this [GitHub Issue](https://github.com/jdepoix/youtube-transcript-api/issues/303) for more details.
 
