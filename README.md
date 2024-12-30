@@ -4,7 +4,7 @@ Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) 
 
 ---
 
-## **How to Run Locally**
+## **How to Run**
 
 The main command is:
 
