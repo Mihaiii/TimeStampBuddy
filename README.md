@@ -6,6 +6,11 @@ Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) 
 
 ## **How to Run**
 
+Install deps:
+```python
+pip install -r requirements.txt
+```
+
 The main command is:
 
 ```python
