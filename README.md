@@ -3,6 +3,11 @@
 Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) with the link to a YouTube video, and it will provide timestamps.
 
 ---
+## **Cost to Run**
+
+The cost to run this repo is **0$**.
+
+Gemini is free. HF Space is free. Supabase is free. Twitter API is free.
 
 ## **How to Run**
 
