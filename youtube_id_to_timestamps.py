@@ -87,15 +87,15 @@ class YoutubeIdToTimestamps:
 
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(initial_message["parts"])
-        logging.info(f"{youtube_id} - First response received")
+        logging.info(f"{youtube_id} - First response received - {len(response.text)=}")
         chat_session.history.append({"role": "model", "parts": [response.text]})
 
-        follow_up_message = f"That's good, but it's too granular. Extract the main ideas/chapters and present them. Only have a chapter at every few minutes, like in the example. Mention as timestamp the beginning of each chapter. See the provided example from above for a better understanding. Answer only with the timestamps and chapters, nothing else."
+        follow_up_message = f"That's good, but it's too granular. The full response must have less than {MAX_RESPONSE_LENGTH} characters, including new lines. Extract the main ideas/chapters and present them. Only have a chapter at every few minutes, like in the example. Mention as timestamp the beginning of each chapter. See the provided example from above for a better understanding. Answer only with the timestamps and chapters, nothing else and remember to make the response short enought to not exceed {MAX_RESPONSE_LENGTH} characters."
         response = chat_session.send_message(follow_up_message)
-        logging.info(f"{youtube_id} - Seconds response received")
+        logging.info(f"{youtube_id} - Seconds response received - {len(response.text)=}")
         chat_session.history.append({"role": "model", "parts": [response.text]})
         
         follow_up_message2 = f"Make it even shorter. Just merge chapters into bigger categories. Provide the final response. Only few chapters with just the big picture."
         response_final = chat_session.send_message(follow_up_message2)
-        logging.info(f"{youtube_id} - {response_final.text}")
+        logging.info(f"{youtube_id} - {response_final.text} - {len(response.text)=}")
         return response_final.text[:MAX_RESPONSE_LENGTH]
