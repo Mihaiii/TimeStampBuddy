@@ -1,6 +1,6 @@
 # **TimeStampBuddy**
 
-Tag **@TimeStampBuddy** on X (formerly Twitter) with the link to a YouTube video, and it will provide timestamps.
+Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) with the link to a YouTube video, and it will provide timestamps.
 
 ---
 
