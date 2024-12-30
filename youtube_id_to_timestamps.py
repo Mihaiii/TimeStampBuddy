@@ -84,6 +84,8 @@ class YoutubeIdToTimestamps:
                 "Attached you have the transcript of a YouTube video. It's a JSON file that has the following properties: text - what is said, meaning the actual transcript, start: the second of that fragment in the video.\n\nI want you to make a summary of the video based on that transcript data and also include the timestamps (make sure they are in HH:MM:SS format), meaning between what hour, minute and second in the video a generated topic/idea is mentioned. Make the topics short. Have lots of topics. Have one topic per line and each line starts with the timestamps.\n\nHere is an example of how your response look like. Pay attention to the format. This is the summary for another video:\n\n0:00 - Introduction\n13:03- 12 startups in 12 months\n36:37 - Photo AI\n1:12:53 - How to learn AI\n2:03:24 - Monetize your website\n3:01:34 - Productivity\n3:41:21 - Advice for young people\n\nDon't make it too granular. Extract the main ideas/chapters and present them. Only have a chapter at every few minutes, like in the example. Mention as timestamp the beginning of each chapter. See the provided example from above for a better understanding.\n",
             ],
         }
+        
+        MAX_RESPONSE_LENGTH = self.max_response_length
 
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(initial_message["parts"])
