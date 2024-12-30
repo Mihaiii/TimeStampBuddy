@@ -47,11 +47,11 @@ YT_TRANSCRIPT_PROXY = ""
 
 - **MAX_PARALLEL_MESSAGES** – The maximum number of messages that can be processed simultaneously.  
 
-- **X_CONSUMER_KEY, X_CONSUMER_SECRET, X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET** – These values are provided when you create a Developer account on X (Twitter).  
+- **X_CONSUMER_KEY, X_CONSUMER_SECRET, X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET** – These values are provided when you create a [Developer account on X (Twitter)](https://developer.x.com/en).  
 
 - **X_USERID** – The bot user's ID. Refer to: [Get User ID](https://developer.x.com/en/docs/x-api/users/lookup/api-reference/get-users-id).  
 
-- **SUPABASE_URL, SUPABASE_KEY** – These values are available after setting up a Supabase account.  
+- **SUPABASE_URL, SUPABASE_KEY** – These values are available after setting up a [Supabase account](https://supabase.com/).  
 
 - **GEMINI_MODEL** – The name of the Gemini model used to generate timestamps based on video transcripts.  
 
