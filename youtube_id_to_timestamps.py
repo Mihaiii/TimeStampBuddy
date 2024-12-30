@@ -9,6 +9,7 @@ import json
 import logging
 
 DEFAULT_GEMINI_MODEL = "gemini-2.0-flash-exp"
+MAX_RESPONSE_LENGTH = 280
 
 
 class YoutubeIdToTimestamps:
@@ -89,7 +90,7 @@ class YoutubeIdToTimestamps:
         logging.info(f"{youtube_id} - First response received")
         chat_session.history.append({"role": "model", "parts": [response.text]})
 
-        follow_up_message = "That's good, but it's too granular. Extract the main ideas/chapters and present them. Only have a chapter at every few minutes, like in the example. Mention as timestamp the beginning of each chapter. See the provided example from above for a better understanding. Answer only with the timestamps and chapters, nothing else."
+        follow_up_message = f"That's good, but it's too granular. The full response must have less than {MAX_RESPONSE_LENGTH} characters, including new lines. Extract the main ideas/chapters and present them. Only have a chapter at every few minutes, like in the example. Mention as timestamp the beginning of each chapter. See the provided example from above for a better understanding. Answer only with the timestamps and chapters, nothing else and remember to make the response short enought to not exceed {MAX_RESPONSE_LENGTH} characters."
         response = chat_session.send_message(follow_up_message)
         logging.info(f"{youtube_id} - {response.text}")
-        return response.text
+        return response.text[:MAX_RESPONSE_LENGTH]
