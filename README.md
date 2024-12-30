@@ -5,7 +5,7 @@ Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) 
 ---
 ## **Cost to Run**
 
-The cost to run this bot solution is **0$**.
+The cost to run this bot solution is **$0**.
 
 Gemini is free. HF Space is free. Supabase is free. Twitter API is free.
 
