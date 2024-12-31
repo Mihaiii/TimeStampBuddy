@@ -64,3 +64,6 @@ YT_TRANSCRIPT_PROXY = ""
 
 - **YT_TRANSCRIPT_PROXY** – The proxy URL if the service is hosted in the cloud. Leave it empty if you don't want to use a proxy. Refer to this [GitHub Issue](https://github.com/jdepoix/youtube-transcript-api/issues/303) for more details.
 
+### Hosting
+
+The service behind the [@TimeStampBuddy account on X](https://x.com/timestampbuddy) is hosted for free on a Huggingface Space: https://huggingface.co/spaces/Mihaiii/TimeStampBuddy/tree/main.
