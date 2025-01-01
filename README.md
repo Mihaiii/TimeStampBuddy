@@ -29,7 +29,8 @@ Create a `.env` file in the **TimeStampBuddy** folder/directory and populate it 
 
 ```
 COLLECT_CRON_INTERVAL_SEC = 900
-PROCESSOR_INTERVAL_SEC = 300
+PROCESSOR_IDLE_INTERVAL_SEC = 300
+PROCESSOR_ACTIVE_INTERVAL_SEC = 20
 MAX_PARALLEL_MESSAGES = 1
 X_CONSUMER_KEY = ""
 X_CONSUMER_SECRET = ""
@@ -48,7 +49,9 @@ YT_TRANSCRIPT_PROXY = ""
 - **COLLECT_CRON_INTERVAL_SEC** – The interval (in seconds) for calling X (Twitter) to gather the latest messages mentioning the bot user (e.g., TimeStampBuddy).  
   > *Note: Be mindful of Twitter's rate limits:* [X API Rate Limits](https://developer.x.com/en/docs/x-api/rate-limits).  
 
-- **PROCESSOR_INTERVAL_SEC** – The wait time (in seconds) for the message processor (the service that fetches timestamps based on Twitter messages) when no messages are available to process.  
+- **PROCESSOR_IDLE_INTERVAL_SEC** – The wait time (in seconds) for the message processor (the service that fetches timestamps based on Twitter messages) when no messages are available to process.  
+
+- **PROCESSOR_ACTIVE_INTERVAL_SEC** – The wait time (in seconds) for the message processor (the service that fetches timestamps based on Twitter messages) when messages are available to process. Note that the interval applies between batches of messages, where each batch can contain a maximum number of messages equal to the value of MAX_PARALLEL_MESSAGES. When setting the value for this variable, consider Gemini's RPM (requests per minute) rate limits.
 
 - **MAX_PARALLEL_MESSAGES** – The maximum number of messages that can be processed simultaneously.  
 

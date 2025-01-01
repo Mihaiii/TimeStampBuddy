@@ -11,7 +11,8 @@ import re
 from youtube_id_to_timestamps import YoutubeIdToTimestamps
 
 DEFAULT_COLLECT_CRON_INTERVAL_SEC = 60 * 15
-DEFAULT_PROCESSOR_INTERVAL_SEC = 60 * 5
+DEFAULT_PROCESSOR_IDLE_INTERVAL_SEC = 60 * 5
+DEFAULT_PROCESSOR_ACTIVE_INTERVAL_SEC = 20
 DEFAULT_MAX_PARALLEL_MESSAGES = 1
 
 
@@ -50,8 +51,16 @@ class CronProcessor:
 
     async def run_data_processor(self):
         while True:
-            processor_interval = int(
-                os.environ.get("PROCESSOR_INTERVAL_SEC", DEFAULT_PROCESSOR_INTERVAL_SEC)
+            processor_idle_interval = int(
+                os.environ.get(
+                    "PROCESSOR_IDLE_INTERVAL_SEC", DEFAULT_PROCESSOR_IDLE_INTERVAL_SEC
+                )
+            )
+            processor_active_interval = int(
+                os.environ.get(
+                    "PROCESSOR_ACTIVE_INTERVAL_SEC",
+                    DEFAULT_PROCESSOR_ACTIVE_INTERVAL_SEC,
+                )
             )
             max_parallel_messages = int(
                 os.environ.get("MAX_MESSAGES", DEFAULT_MAX_PARALLEL_MESSAGES)
@@ -59,16 +68,17 @@ class CronProcessor:
             messages = await self._get_messages_to_process(max_parallel_messages)
             if not messages:
                 logging.info(
-                    f"No message to be processed found in the db. Will wait {processor_interval} seconds."
+                    f"No message to be processed found in the db. Will wait {processor_idle_interval} seconds."
                 )
-                await asyncio.sleep(processor_interval)
+                await asyncio.sleep(processor_idle_interval)
                 logging.info(
-                    f"Processing data with interval {processor_interval} seconds..."
+                    f"Processing data with interval {processor_idle_interval} seconds..."
                 )
                 continue
 
             tasks = [self._process_message(msg) for msg in messages]
             await asyncio.gather(*tasks)
+            await asyncio.sleep(processor_active_interval)
 
     async def _get_messages_to_process(self, limit: int) -> List:
         try:
@@ -110,7 +120,9 @@ class CronProcessor:
         timestamps = await self.db.get_timestamps(video_id=video_id)
         if timestamps is None:
             try:
-                instance = YoutubeIdToTimestamps(self.platform.get_max_response_length())
+                instance = YoutubeIdToTimestamps(
+                    self.platform.get_max_response_length()
+                )
                 timestamps = instance.get_timestamps(video_id)
             except Exception as e:
                 logging.error(
