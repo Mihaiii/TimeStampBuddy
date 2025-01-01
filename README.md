@@ -28,7 +28,7 @@ Before running it locally, configure the environment variables:
 Create a `.env` file in the **TimeStampBuddy** folder/directory and populate it with values for the following keys:  
 
 ```
-COLLECT_CRON_INTERVAL_SEC = 900   
+COLLECT_CRON_INTERVAL_SEC = 900
 PROCESSOR_INTERVAL_SEC = 300
 MAX_PARALLEL_MESSAGES = 1
 X_CONSUMER_KEY = ""
@@ -66,4 +66,4 @@ YT_TRANSCRIPT_PROXY = ""
 
 ## **Hosting**
 
-The service behind the [@TimeStampBuddy account on X](https://x.com/timestampbuddy) is hosted for free on a Huggingface Space. The source files can be inspected here: https://huggingface.co/spaces/Mihaiii/TimeStampBuddy/tree/main.
+The service behind the [@TimeStampBuddy account on X](https://x.com/timestampbuddy) is hosted for free on a Huggingface Space. The source files can be inspected here: https://huggingface.co/spaces/Mihaiii/TimeStampBuddy/tree/main .
