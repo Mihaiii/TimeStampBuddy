@@ -16,7 +16,7 @@ Install deps:
 pip install -r requirements.txt
 ```
 
-The main command is:
+The main run command is:
 
 ```bash
 python cron_processor.py
