@@ -75,4 +75,6 @@ YT_TRANSCRIPT_PROXY = ""
 
 ## **Hosting**
 
-The service behind the [@TimeStampBuddy account on X](https://x.com/timestampbuddy) is hosted for free on a Huggingface Space. The source files can be inspected here: https://huggingface.co/spaces/Mihaiii/TimeStampBuddy/tree/main .
+The service behind the [@TimeStampBuddy account on X](https://x.com/timestampbuddy) is hosted for free on a Huggingface Space. 
+
+The source files can be inspected here: https://huggingface.co/spaces/Mihaiii/TimeStampBuddy/tree/main .
