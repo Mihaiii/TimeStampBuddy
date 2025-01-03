@@ -41,6 +41,7 @@ class YoutubeIdToTimestamps:
 
     def _get_transcript(self, youtube_id):
         logging.info(f"{youtube_id} - making the request to get the transcript")
+        transcript_list = YouTubeTranscriptApi.list_transcripts(youtube_id)
         transcript = transcript_list.find_generated_transcript(self.language_codes)
         #if not transcript:
         #    logging.error("No auto generated transcript found")
