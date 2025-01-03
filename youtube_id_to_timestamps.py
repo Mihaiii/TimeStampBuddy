@@ -31,7 +31,7 @@ class YoutubeIdToTimestamps:
         logging.info(f"{youtube_id} - making the request to get the transcript")
         # TODO: get the language from the text from the tweet
         data = YouTubeTranscriptApi.get_transcript(
-            youtube_id, languages=["en", "es", "de"], proxies=self.proxies
+            youtube_id, proxies=self.proxies
         )
         logging.info(f"{youtube_id} - got the transcript. First 5 objs: {data[:5]}")
         transformed_data = [
