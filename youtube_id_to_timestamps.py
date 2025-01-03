@@ -22,18 +22,6 @@ class YoutubeIdToTimestamps:
                 "http": pr.replace("https://", "http://"),
             }
         self.max_response_length = max_response_length
-        self.language_codes = [
-    "en", "es", "de", "pt", "fr", "ab", "aa", "af", "ak", "sq", "am", "ar", "hy", "as", "ay", "az",
-    "bn", "ba", "eu", "be", "bho", "bs", "br", "bg", "my", "ca", "ceb", "zh-Hans", "zh-Hant", "co",
-    "hr", "cs", "da", "dv", "nl", "dz", "eo", "et", "ee", "fo", "fj", "fil", "fi", "gaa", "gl", "lg",
-    "ka", "el", "gn", "gu", "ht", "ha", "haw", "iw", "hi", "hmn", "hu", "is", "ig", "id", "iu", "ga",
-    "it", "ja", "jv", "kl", "kn", "kk", "kha", "km", "rw", "ko", "kri", "ku", "ky", "lo", "la", "lv",
-    "ln", "lt", "lua", "luo", "lb", "mk", "mg", "ms", "ml", "mt", "gv", "mi", "mr", "mn", "mfe", "ne",
-    "new", "nso", "no", "ny", "oc", "or", "om", "os", "pam", "ps", "fa", "pl", "pt-PT", "pa", "qu",
-    "ro", "rn", "ru", "sm", "sg", "sa", "gd", "sr", "crs", "sn", "sd", "si", "sk", "sl", "so", "st",
-    "su", "sw", "ss", "sv", "tg", "ta", "tt", "te", "th", "bo", "ti", "to", "ts", "tn", "tum", "tr",
-    "tk", "uk", "ur", "ug", "uz", "ve", "vi", "war", "cy", "fy", "wo", "xh", "yi", "yo", "zu"
-        ]
 
     def _seconds_to_hhmmss(self, seconds):
         td = timedelta(seconds=round(seconds))
@@ -41,12 +29,12 @@ class YoutubeIdToTimestamps:
 
     def _get_transcript(self, youtube_id):
         logging.info(f"{youtube_id} - making the request to get the transcript")
-        #transcript_list = YouTubeTranscriptApi.list_transcripts(youtube_id)
-        #transcript = transcript_list.find_generated_transcript(self.language_codes)
+        transcript_list = YouTubeTranscriptApi.list_transcripts(youtube_id)
+        transcript = next((item for item in transcript_list if item.get("is_generated")), transcript_list[0])
         #if not transcript:
         #    logging.error("No auto generated transcript found")
         data = YouTubeTranscriptApi.get_transcript(
-            youtube_id, languages=['en', 'es', 'de', 'pt'], proxies=self.proxies
+            youtube_id, languages=transcript.language_code, proxies=self.proxies
         )
         logging.info(f"{youtube_id} - got the transcript. First 5 objs: {data[:5]}")
         transformed_data = [
