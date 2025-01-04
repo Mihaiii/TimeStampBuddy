@@ -58,7 +58,7 @@ YT_TRANSCRIPT_PROXY = ""
 - **PROCESSOR_IDLE_INTERVAL_SEC** – The wait time (in seconds) for the message processor (the service that fetches timestamps based on Twitter messages) when no messages are available to process.
 
 - **PROCESSOR_ACTIVE_INTERVAL_SEC** – The wait time (in seconds) for the message processor (the service that fetches timestamps based on Twitter messages) when messages are available to process. Note that the interval applies between batches of messages, where each batch can contain a maximum number of messages equal to the value of MAX_PARALLEL_MESSAGES.
-  > *Note: Be mindful of Gemini's rate limits:* [Gemini API Rate Limit](https://ai.google.dev/pricing)).
+  > *Note: Be mindful of Gemini's rate limits:* [Gemini API Rate Limit](https://ai.google.dev/pricing).
 
 - **MAX_PARALLEL_MESSAGES** – The maximum number of messages that can be processed simultaneously.  
 
