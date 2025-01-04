@@ -29,12 +29,12 @@ class YoutubeIdToTimestamps:
 
     def _get_transcript(self, youtube_id):
         logging.info(f"{youtube_id} - making the request to get the transcript")
-        transcript_list = YouTubeTranscriptApi.list_transcripts(youtube_id)
-        transcript = next((item for item in transcript_list if item.get("is_generated")), transcript_list[0])
+        #transcript_list = YouTubeTranscriptApi.list_transcripts(youtube_id)
+        #transcript = next((item for item in transcript_list if item.get("is_generated")), transcript_list[0])
         #if not transcript:
         #    logging.error("No auto generated transcript found")
         data = YouTubeTranscriptApi.get_transcript(
-            youtube_id, languages=[transcript.language_code], proxies=self.proxies
+            youtube_id, languages=['en', 'es', 'pt', 'pt-PT', 'de', 'it', 'zh-Hant', 'zh-Hans', 'ja', 'ro', 'vi'], proxies=self.proxies
         )
         logging.info(f"{youtube_id} - got the transcript. First 5 objs: {data[:5]}")
         transformed_data = [
