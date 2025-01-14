@@ -4,6 +4,8 @@ Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) 
 
 You can see past examples in the 'Replies' tab on the bot account: https://x.com/TimeStampBuddy
 
+![Example](https://i.imgur.com/rLKzvQ1.png)
+
 ---
 ## **Cost to Run**
 
