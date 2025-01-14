@@ -1,6 +1,6 @@
 # **TimeStampBuddy**
 
-Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) with the link to a YouTube video, and it will generate timestamps.
+Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) with the link to a YouTube video, and it will generate timestamps using Google's Gemini LLM.
 
 You can see past examples in the 'Replies' tab on the bot account: https://x.com/TimeStampBuddy
 
