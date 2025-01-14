@@ -2,7 +2,7 @@
 
 Tag [**@TimeStampBuddy**](https://x.com/timestampbuddy) on X (formerly Twitter) with the link to a YouTube video, and it will provide timestamps in a reply.
 
-You can see past examples in the 'Replies' tag on the bot account: https://x.com/TimeStampBuddy
+You can see past examples in the 'Replies' tab on the bot account: https://x.com/TimeStampBuddy
 
 ---
 ## **Cost to Run**
