@@ -34,7 +34,7 @@ class YoutubeIdToTimestamps:
         #if not transcript:
         #    logging.error("No auto generated transcript found")
         data = YouTubeTranscriptApi.get_transcript(
-            youtube_id, languages=['en', 'es', 'pt', 'pt-PT', 'de', 'it', 'zh-Hant', 'zh-Hans', 'ja', 'ro', 'vi'], proxies=self.proxies
+            youtube_id, languages=['en', 'es', 'pt', 'pt-PT', 'de', 'it', 'zh-Hant', 'zh-Hans', 'ja', 'ro', 'vi', 'fr'], proxies=self.proxies
         )
         logging.info(f"{youtube_id} - got the transcript. First 5 objs: {data[:5]}")
         transformed_data = [
