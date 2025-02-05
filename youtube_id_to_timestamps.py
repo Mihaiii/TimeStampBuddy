@@ -103,6 +103,7 @@ class YoutubeIdToTimestamps:
         follow_up_message = f"Make it even shorter. Just merge chapters into bigger categories. Provide the final response. Only few chapters with just the big picture."
         response = chat_session.send_message(follow_up_message)
         logging.info(f"{youtube_id} - {response.text} - {len(response.text)=}")
-        if response.text[:MAX_RESPONSE_LENGTH] != response.text:
-            response.text = response.text[:response.text.rfind("\n")]
-        return response.text[:MAX_RESPONSE_LENGTH]
+        max_len_resp = response.text[:MAX_RESPONSE_LENGTH]
+        if max_len_resp != response.text:
+            return max_len_resp[:max_len_resp.rfind("\n")]
+        return max_len_resp
