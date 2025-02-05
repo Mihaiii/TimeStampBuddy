@@ -104,5 +104,5 @@ class YoutubeIdToTimestamps:
         response = chat_session.send_message(follow_up_message)
         logging.info(f"{youtube_id} - {response.text} - {len(response.text)=}")
         if response.text[:MAX_RESPONSE_LENGTH] != response.text:
-            reaponse.text = reaponse.text[:response.text.rfind("\n")]
+            response.text = response.text[:response.text.rfind("\n")]
         return response.text[:MAX_RESPONSE_LENGTH]
